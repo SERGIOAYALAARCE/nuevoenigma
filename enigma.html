@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape Room Romántico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Si tienes un archivo CSS externo, agrégalo aquí -->
+    <!-- <link rel="stylesheet" href="enigma.css"> -->
+    <style>
+        html
+    .hud-container {
+        position: relative;
+        min-height: 100vh;
+        padding: 20px;
+        background-image: 
+            radial-gradient(circle at 20% 20%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(64, 224, 208, 0.1) 0%, transparent 50%);
+    }
+
+    body {
+        background: radial-gradient(ellipse at top, #2a1833 0%, #181a1b 100%);
+        color: #fff;
+    }
+
+    .hud-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .hud-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        background: linear-gradient(45deg, #ff6b9d, #40e0d0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+        margin-bottom: 10px;
+        animation: glow 2s ease-in-out infinite alternate;
+        color: #ffb6e6;
+        text-shadow: 0 0 20px #ffb6e6, 0 0 40px #40e0d0;
+    }
+
+    .hud-subtitle {
+        font-size: 1.2rem;
+        color: #40e0d0;
+        opacity: 0.8;
+    }
+
+    .magic-sphere {
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(64, 224, 208, 0.4), rgba(255, 107, 157, 0.2));
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        transition: all 0.5s ease;
+        box-shadow: 
+            0 0 20px rgba(64, 224, 208, 0.6),
+            inset 0 0 30px rgba(255, 255, 255, 0.3),
+            inset 0 0 50px rgba(64, 224, 208, 0.1);
+        animation: crystalFloat 4s ease-in-out infinite, crystalRotate 8s linear infinite;
+        z-index: 10;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(5px);
+    }
+
+    .magic-sphere:hover {
+        transform: translate(-50%, -50%) scale(1.2);
+        box-shadow: 
+            0 0 40px rgba(64, 224, 208, 0.9),
+            0 0 60px rgba(255, 107, 157, 0.7),
+            inset 0 0 60px rgba(255, 255, 255, 0.5),
+            inset 0 0 80px rgba(64, 224, 208, 0.3);
+        animation: crystalFloat 4s ease-in-out infinite, crystalRotate 4s linear infinite, crystalGlow 1s ease-in-out infinite alternate;
+    }
+
+    .crystal-whale {
+        position: absolute;
+        top: 35%;
+        left: 30%;
+        font-size: 20px;
+        animation: floatInCrystal 6s ease-in-out infinite;
+        z-index: 15;
+    }
+
+    .crystal-moon {
+        position: absolute;
+        top: 20%;
+        right: 25%;
+        font-size: 12px;
+        animation: moonInCrystal 5s ease-in-out infinite reverse;
+        z-index: 15;
+    }
+
+    .magic-sphere::before {
+        content: '';
+        position: absolute;
+        top: 15%;
+        left: 20%;
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        filter: blur(3px);
+        animation: crystalShine 3s ease-in-out infinite alternate;
+    }
+
+    .magic-sphere::after {
+        content: '';
+        position: absolute;
+        top: 60%;
+        right: 30%;
+        width: 8px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        filter: blur(2px);
+        animation: crystalShine 2s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes crystalFloat {
+        0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+        50% { transform: translate(-50%, -50%) translateY(-8px); }
+    }
+
+    @keyframes crystalRotate {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @keyframes crystalGlow {
+        from { 
+            box-shadow: 
+                0 0 40px rgba(64, 224, 208, 0.9),
+                0 0 60px rgba(255, 107, 157, 0.7),
+                inset 0 0 60px rgba(255, 255, 255, 0.5);
+        }
+        to { 
+            box-shadow: 
+                0 0 60px rgba(64, 224, 208, 1),
+                0 0 80px rgba(255, 107, 157, 0.9),
+                inset 0 0 80px rgba(255, 255, 255, 0.7);
+        }
+    }
+
+    @keyframes floatInCrystal {
+        0%, 100% { transform: translateY(0px) translateX(0px); }
+        25% { transform: translateY(-3px) translateX(2px); }
+        50% { transform: translateY(-1px) translateX(-1px); }
+        75% { transform: translateY(-2px) translateX(1px); }
+    }
+
+    @keyframes moonInCrystal {
+        0%, 100% { transform: translateY(0px) scale(1); opacity: 0.8; }
+        50% { transform: translateY(-2px) scale(1.1); opacity: 1; }
+    }
+
+    @keyframes crystalShine {
+        from { opacity: 0.3; transform: scale(1); }
+        to { opacity: 0.8; transform: scale(1.2); }
+    }
+
+    .music-player {
+        background: rgba(0, 0, 0, 0.8);
+        border: 2px solid #40e0d0;
+        border-radius: 15px;
+        padding: 15px;
+        margin: 20px auto;
+        max-width: 400px;
+        display: none;
+        animation: musicPlayerAppear 0.8s ease-out;
+    }
+
+    @keyframes musicPlayerAppear {
+        from { opacity: 0; transform: scale(0.8) translateY(-20px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .music-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .music-btn {
+        background: linear-gradient(45deg, #ff6b9d, #40e0d0);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .music-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(64, 224, 208, 0.5);
+    }
+
+    .lyrics-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 2000;
+        display: none;
+        overflow-y: auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .lyrics-content {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(0, 0, 0, 0.9);
+        border: 3px solid #ff6b9d;
+        border-radius: 20px;
+        padding: 40px;
+        position: relative;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 0 50px rgba(255, 107, 157, 0.5);
+    }
+
+    .lyrics-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .lyrics-title {
+        font-size: 2.5rem;
+        background: linear-gradient(45deg, #ff6b9d, #40e0d0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+        font-family: 'Dancing Script', cursive;
+    }
+
+    .lyrics-artist {
+        color: #40e0d0;
+        font-size: 1.2rem;
+        font-style: italic;
+    }
+
+    .lyrics-text {
+        font-family: 'Dancing Script', cursive;
+        font-size: 1.3rem;
+        line-height: 1.8;
+        color: #fff;
+        text-align: center;
+        margin: 30px 0;
+    }
+
+    .love-word {
+        color: #fff;
+        font-family: 'Dancing Script', cursive;
+        font-size: 1.3rem;
+        font-weight: normal;
+        transition: all 0.5s ease;
+    }
+
+    .love-word.scanner-active {
+        color: #00ffff;
+        font-weight: 900;
+        font-size: 1.6rem;
+        text-shadow: 
+            0 0 5px #00ffff,
+            0 0 10px #00ffff,
+            0 0 15px #00ffff,
+            0 0 20px #00ffff,
+            0 0 35px #00ffff,
+            0 0 40px #00ffff,
+            0 0 50px #00ffff,
+            0 0 75px #00ffff;
+        animation: ledGlow 1.5s ease-in-out infinite alternate;
+        transform: scale(1.1);
+        transition: all 0.5s ease;
+        background: linear-gradient(45deg, #00ffff, #ffffff, #00ffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: brightness(1.5) saturate(2);
+    }
+
+    @keyframes ledGlow {
+        0% { 
+            text-shadow: 
+                0 0 5px #00ffff,
+                0 0 10px #00ffff,
+                0 0 15px #00ffff,
+                0 0 20px #00ffff,
+                0 0 35px #00ffff,
+                0 0 40px #00ffff;
+            transform: scale(1.1);
+        }
+        50% {
+            text-shadow: 
+                0 0 2px #ffffff,
+                0 0 5px #00ffff,
+                0 0 10px #00ffff,
+                0 0 15px #00ffff,
+                0 0 20px #00ffff,
+                0 0 35px #00ffff,
+                0 0 40px #00ffff,
+                0 0 50px #00ffff,
+                0 0 75px #00ffff,
+                0 0 100px #00ffff;
+            transform: scale(1.15);
+        }
+        100% { 
+            text-shadow: 
+                0 0 5px #ffffff,
+                0 0 10px #00ffff,
+                0 0 15px #00ffff,
+                0 0 20px #00ffff,
+                0 0 35px #00ffff,
+                0 0 40px #00ffff,
+                0 0 50px #00ffff,
+                0 0 75px #00ffff,
+                0 0 100px #00ffff,
+                0 0 125px #00ffff;
+            transform: scale(1.2);
+        }
+    }
+
+    .close-lyrics {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: #ff6b9d;
+        font-size: 2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .close-lyrics:hover {
+        color: #40e0d0;
+        transform: scale(1.2);
+    }
+
+    @keyframes glow {
+        from { text-shadow: 0 0 20px rgba(255, 107, 157, 0.5); }
+        to { text-shadow: 0 0 30px rgba(255, 107, 157, 0.8), 0 0 40px rgba(64, 224, 208, 0.3); }
+    }
+
+    .puzzle-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 30px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .puzzle-card {
+        background: rgba(0,0,0,0.8);
+        border: 2px solid #ffb6e6;
+        box-shadow: 0 0 30px #ffb6e633;
+        border-radius: 20px;
+        padding: 30px;
+        position: relative;
+        backdrop-filter: blur(15px);
+        transition: all 0.3s ease;
+        min-height: 500px;
+    }
+
+    .puzzle-card:hover {
+        border-color: #40e0d0;
+        box-shadow: 0 0 40px #40e0d033;
+    }
+
+    .puzzle-card::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #ff6b9d, #40e0d0, #ff6b9d);
+        border-radius: 20px;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .puzzle-card:hover::before {
+        opacity: 0.4;
+    }
+
+    .puzzle-number {
+        position: absolute;
+        top: -20px;
+        left: 25px;
+        background: linear-gradient(45deg, #ff6b9d, #40e0d0);
+        color: #181a1b;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.4rem;
+        box-shadow: 0 0 20px #ffb6e6;
+    }
+
+    .puzzle-title {
+        font-size: 1.4rem;
+        color: #40e0d0;
+        margin-bottom: 20px;
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .puzzle-text {
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 25px;
+        color: #fff;
+        font-style: italic;
+        text-align: justify;
+    }
+
+    /* Animaciones 3D y elementos interactivos */
+    .whale-animation {
+        width: 100%;
+        height: 120px;
+        position: relative;
+        margin: 20px 0;
+        background: linear-gradient(180deg, #001122 0%, #003366 100%);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .whale {
+        position: absolute;
+        font-size: 40px;
+        animation: swim 8s ease-in-out infinite;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .whale:hover {
+        transform: translateY(-50%) scale(1.1);
+        filter: drop-shadow(0 0 15px rgba(64, 224, 208, 0.6));
+    }
+
+    @keyframes swim {
+        0%, 100% { left: -60px; }
+        50% { left: calc(100% - 40px); }
+    }
+
+    .moon {
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        font-size: 20px;
+        animation: moonGlow 3s ease-in-out infinite alternate;
+        z-index: 5;
+    }
+
+    @keyframes moonGlow {
+        from { text-shadow: 0 0 10px #fff; }
+        to { text-shadow: 0 0 20px #fff, 0 0 30px #40e0d0; }
+    }
+
+    .go-board {
+        width: 380px;
+        height: 380px;
+        background: #d4a574;
+        border: 3px solid #8b4513;
+        border-radius: 10px;
+        margin: 20px auto;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .go-grid {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        width: 320px;
+        height: 320px;
+    }
+
+    .go-lines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .go-line-h, .go-line-v {
+        position: absolute;
+        background: #8b4513;
+    }
+
+    .go-line-h {
+        width: 100%;
+        height: 2px;
+    }
+
+    .go-line-v {
+        height: 100%;
+        width: 2px;
+    }
+
+    .go-coordinates {
+        position: absolute;
+        color: #8b4513;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .go-coord-letter {
+        top: 5px;
+        transform: translateX(-50%);
+    }
+
+    .go-coord-number {
+        left: 5px;
+        transform: translateY(-50%);
+    }
+
+    .go-intersection {
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        border-radius: 50%;
+        transition: background 0.2s ease;
+        transform: translate(-50%, -50%);
+    }
+
+    .go-intersection:hover {
+        background: rgba(255, 107, 157, 0.3);
+    }
+
+    .go-stone {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        pointer-events: none;
+        z-index: 10;
+        animation: stonePlace 0.3s ease-out;
+    }
+
+    @keyframes stonePlace {
+        0% { transform: translate(-50%, -50%) scale(0); }
+        50% { transform: translate(-50%, -50%) scale(1.2); }
+        100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .go-stone.black {
+        background: radial-gradient(circle at 30% 30%, #333, #000);
+    }
+
+    .go-stone.white {
+        background: radial-gradient(circle at 30% 30%, #fff, #ddd);
+    }
+
+    .go-star-points {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: #8b4513;
+        border-radius: 50%;
+    }
+
+    .go-center-star {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .go-corner-stars {
+        position: absolute;
+    }
+
+    .go-info {
+        text-align: center;
+        margin-top: 10px;
+        color: #40e0d0;
+        font-size: 0.9rem;
+    }
+
+    .go-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .go-btn {
+        padding: 8px 15px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid #40e0d0;
+        border-radius: 5px;
+        color: #40e0d0;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+    }
+
+    .go-btn:hover {
+        background: rgba(64, 224, 208, 0.2);
+    }
+
+    .go-btn.active {
+        background: rgba(64, 224, 208, 0.3);
+        border-color: #ff6b9d;
+    }
+
+    .yin-yang {
+        width: 100px;
+        height: 100px;
+        margin: 20px auto;
+        border-radius: 50%;
+        background: linear-gradient(90deg, #000 50%, #fff 50%);
+        position: relative;
+        animation: rotate 4s linear infinite;
+    }
+
+    .yin-yang::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 25%;
+        width: 50%;
+        height: 50%;
+        border-radius: 50%;
+        background: #fff;
+    }
+
+    .yin-yang::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 25%;
+        width: 50%;
+        height: 50%;
+        border-radius: 50%;
+        background: #000;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .treasure-chest {
+        width: 200px;
+        height: 140px;
+        background: linear-gradient(45deg, #8b4513, #d2691e);
+        border-radius: 15px 15px 8px 8px;
+        margin: 20px auto;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .treasure-chest:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+    }
+
+    .chest-lid {
+        width: 100%;
+        height: 45%;
+        background: linear-gradient(45deg, #a0522d, #daa520);
+        border-radius: 15px 15px 0 0;
+        position: absolute;
+        top: 0;
+        transition: transform 0.8s ease;
+        transform-origin: bottom;
+        border: 3px solid #654321;
+    }
+
+    .chest-lock {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 35px;
+        background: linear-gradient(45deg, #ffd700, #ffed4e);
+        border-radius: 8px 8px 15px 15px;
+        border: 2px solid #b8860b;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .chest-lock::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 15px;
+        height: 15px;
+        border: 3px solid #b8860b;
+        border-bottom: none;
+        border-radius: 15px 15px 0 0;
+        background: transparent;
+    }
+
+    .chest-lock.unlocked::before {
+        transform: translateX(-50%) rotate(45deg);
+        left: 60%;
+    }
+
+    .chest-open .chest-lid {
+        transform: rotateX(-130deg);
+    }
+
+    .chest-interior {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 55%;
+        background: linear-gradient(180deg, #8b4513, #654321);
+        border-radius: 0 0 8px 8px;
+        display: none;
+        padding: 10px;
+        overflow: hidden;
+    }
+
+    .chest-open .chest-interior {
+        display: block;
+        animation: chestGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes chestGlow {
+        from { box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.3); }
+        to { box-shadow: inset 0 0 40px rgba(255, 215, 0, 0.6); }
+    }
+
+    .chest-puzzle {
+        display: none;
+        background: rgba(0, 0, 0, 0.9);
+        border: 3px solid #ffd700;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 400px;
+        text-align: center;
+    }
+
+    .chest-puzzle.active {
+        display: block;
+        animation: puzzleAppear 0.5s ease-out;
+    }
+
+    @keyframes puzzleAppear {
+        from { opacity: 0; transform: scale(0.8); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .combination-lock {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .combination-dial {
+        width: 60px;
+        height: 60px;
+        border: 3px solid #ffd700;
+        border-radius: 50%;
+        background: radial-gradient(circle, #333, #000);
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .combination-dial:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .dial-number {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ffd700;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .dial-pointer {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid #ff6b9d;
+    }
+
+    .treasure-items {
+        display: none;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .treasure-item {
+        background: rgba(255, 215, 0, 0.2);
+        border: 2px solid #ffd700;
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 2rem;
+    }
+
+    .treasure-item:hover {
+        transform: scale(1.1);
+        background: rgba(255, 215, 0, 0.4);
+    }
+
+    .treasure-item.collected {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+
+    .floating-cats {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .cat {
+        position: absolute;
+        font-size: 25px;
+        opacity: 0.4;
+        animation: floatCat 12s ease-in-out infinite;
+    }
+
+    @keyframes floatCat {
+        0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+        10%, 90% { opacity: 0.4; }
+        50% { transform: translateY(-10vh) rotate(360deg); opacity: 0.7; }
+    }
+
+    .answer-section {
+        margin-top: 25px;
+    }
+
+    .answer-input {
+        width: 100%;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid #40e0d0;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 1.1rem;
+        font-family: inherit;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .answer-input:focus {
+        outline: none;
+        border-color: #ff6b9d;
+        box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
+    }
+
+    .accuracy-meter {
+        width: 100%;
+        height: 20px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        margin: 10px 0;
+        overflow: hidden;
+        border: 1px solid #40e0d0;
+    }
+
+    .accuracy-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #ffb6e6, #40e0d0);
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 10px;
+    }
+
+    .accuracy-text {
+        text-align: center;
+        font-size: 0.9rem;
+        margin-top: 5px;
+        color: #40e0d0;
+    }
+
+    .button-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    .action-btn {
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 2px solid #40e0d0;
+        border-radius: 8px;
+        color: #40e0d0;
+        font-weight: bold;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+    }
+
+    .action-btn:hover {
+        background: rgba(64, 224, 208, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(64, 224, 208, 0.3);
+    }
+
+    .action-btn.scanner {
+        border-color: #ffb6e6;
+        color: #ffb6e6;
+    }
+
+    .action-btn.scanner:hover {
+        background: rgba(255, 107, 157, 0.2);
+        box-shadow: 0 5px 15px rgba(255, 107, 157, 0.3);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(45deg, #ffb6e6, #40e0d0);
+        border: none;
+        border-radius: 10px;
+        color: #181a1b;
+        font-weight: bold;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 107, 157, 0.5);
+    }
+
+    .scanner-display {
+        background: rgba(0, 0, 0, 0.8);
+        border: 2px solid #ff6b9d;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        display: none;
+        animation: scannerGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes scannerGlow {
+        from { box-shadow: 0 0 10px rgba(255, 107, 157, 0.3); }
+        to { box-shadow: 0 0 20px rgba(255, 107, 157, 0.6); }
+    }
+
+    .hint-display {
+        background: rgba(64, 224, 208, 0.1);
+        border: 2px solid #40e0d0;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        display: none;
+        font-style: italic;
+    }
+
+    .word-analyzer {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid #40e0d0;
+        border-radius: 8px;
+        padding: 10px;
+        margin: 10px 0;
+        display: none;
+    }
+
+    .letter-match {
+        display: inline-block;
+        margin: 2px;
+        padding: 5px 8px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .letter-correct {
+        background: #40e0d0;
+        color: #000;
+    }
+
+    .letter-partial {
+        background: #ffa500;
+        color: #000;
+    }
+
+    .letter-wrong {
+        background: #ff6b9d;
+        color: #000;
+    }
+
+    .result-message {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(15px);
+        transition: all 0.4s ease;
+    }
+
+    .result-message.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .result-message.correct {
+        background: rgba(64,224,208,0.2);
+        border: 2px solid #40e0d0;
+        color: #40e0d0;
+    }
+
+    .result-message.incorrect {
+        background: rgba(255,182,230,0.2);
+        border: 2px solid #ffb6e6;
+        color: #ffb6e6;
+    }
+
+    .romantic-message {
+        font-style: italic;
+        margin-top: 15px;
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    .progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #ff6b9d, #40e0d0);
+        transition: width 0.5s ease;
+        z-index: 1000;
+    }
+
+    .mini-puzzles {
+        display: none;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .mini-puzzle {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid #40e0d0;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .love-letter {
+        background: #fff;
+        color: #333;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        transform: rotate(-2deg);
+        transition: transform 0.3s ease;
+    }
+
+    .love-letter:hover {
+        transform: rotate(0deg) scale(1.02);
+    }
+
+    @media (max-width: 768px) {
+        .puzzle-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .hud-title {
+            font-size: 2rem;
+        }
+        
+        .puzzle-card {
+            padding: 20px;
+            min-height: auto;
+        }
+
+        .lyrics-content {
+            padding: 20px;
+            margin: 10px;
+        }
+
+        .lyrics-title {
+            font-size: 2rem;
+        }
+
+        .lyrics-text {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="floating-cats" id="floatingCats"></div>
+
+
+
+<!-- Modal de letra de la canción -->
+<div class="lyrics-modal" id="lyricsModal">
+    <div class="lyrics-content">
+        <button class="close-lyrics" onclick="closeLyrics()">×</button>
+        <div class="lyrics-header">
+            <h2 class="lyrics-title">As The World Falls Down</h2>
+            <p class="lyrics-artist">David Bowie</p>
+        </div>
+        <div class="lyrics-text">
+            There's such a sad <span class="love-word">love</span><br>
+            Deep in your eyes a kind of pale jewel<br>
+            Open and closed<br>
+            Within your eyes<br>
+            I'll place the sky<br>
+            Within your eyes<br><br>
+
+            There's such a fooled heart<br>
+            Beatin' so fast<br>
+            In search of new dreams<br>
+            A <span class="love-word">love</span> that will last<br>
+            Within your heart<br>
+            I'll place the moon<br>
+            Within your heart<br><br>
+
+            As the pain sweeps through<br>
+            Makes no sense for you<br>
+            Every thrill is gone<br>
+            Wasn't too much fun at all<br>
+            But I'll be there for you-ou-ou<br>
+            As the world falls down<br>
+            Falling<br>
+            As the world falls down<br>
+            Falling<br>
+            Falling in <span class="love-word">love</span><br><br>
+
+            I'll paint you mornings of gold<br>
+            I'll spin you Valentine evenings though we're strangers 'til now<br>
+            We're choosing the path<br>
+            Between the stars<br>
+            I'll leave my <span class="love-word">love</span><br>
+            Between the stars<br><br>
+
+            As the pain sweeps through<br>
+            Makes no sense for you<br>
+            Every thrill is gone<br>
+            Wasn't too much fun at all<br>
+            But I'll be there for you-ou-ou<br>
+            As the world falls down<br>
+            Falling<br>
+            As the world falls down<br>
+            Falling<br>
+            Falling<br>
+            As the world falls down<br>
+            Falling<br>
+            Falling<br>
+            Falling<br>
+            Falling in <span class="love-word">love</span><br><br>
+
+            As the world falls down<br>
+            Falling<br>
+            Falling<br>
+            Falling<br>
+            Falling in <span class="love-word">love</span><br>
+            As the world falls down<br>
+            Makes no sense at all<br>
+            Makes no sense to fall<br>
+            Falling<br>
+            As the world falls down<br>
+            Falling<br>
+            Falling<br>
+            Falling in <span class="love-word">love</span><br>
+            As the world falls down<br>
+            Falling<br>
+            Falling<br>
+            Falling in <span class="love-word">love</span><br>
+            Falling in <span class="love-word">love</span>
+        </div>
+    </div>
+</div>
+
+<div class="hud-container">
+    <div class="hud-header">
+        <h1 class="hud-title">🌟 ESCAPE ROOM ROMÁNTICO 🌟</h1>
+        <p class="hud-subtitle"> Encuentra las 3 llaves del amor</p>
+    </div>
+
+    <div class="puzzle-grid">
+        <!-- Acertijo 1: La Ballena y la Luna -->
+        <div class="puzzle-card">
+            <div class="puzzle-number">1</div>
+            <h3 class="puzzle-title">🐋 La Ballena, la Luna y la Canción</h3>
+            
+            <div class="whale-animation">
+                <div class="whale" onclick="activateSphere()" id="whaleContainer" title="Toca la bola de cristal para activar la magia...">
+                    <!-- Bola de Cristal Mágica -->
+                    <div class="magic-sphere" id="magicSphere">
+                        <div class="crystal-whale">🐋</div>
+                        <div class="crystal-moon">🌙</div>
+                    </div>
+                </div>
+            </div>
+            <p style="color: #40e0d0; font-style: italic; margin-top: 10px; text-align: center;">
+                "Toca la bola de cristal mágica para escuchar la canción del laberinto..."
+            </p>
+
+            <!-- Reproductor de música (aparece al activar la esfera) -->
+            <div class="music-player" id="musicPlayer">
+                <div class="music-controls">
+                    <button class="music-btn" onclick="toggleMusic()" id="playBtn">▶️</button>
+                    <button class="music-btn" onclick="showLyrics()" id="lyricsBtn" title="Ver letra de la canción">🎵</button>
+                    <span style="color: #40e0d0; margin-left: 10px; font-size: 0.9rem;">As The World Falls Down</span>
+                </div>
+            </div>
+            
+            <p class="puzzle-text">
+                "En lo profundo nada una ballena, guardiana de secretos infinitos.<br>
+                En su viaje silencioso, lleva consigo un misterio que solo el amor puede descifrar.<br>
+                Tan alto como la luna que ilumina los cielos, una promesa se refleja en la plata nocturna.<br>
+                En cada nota de la melodía que escuchamos, vibra un eco de nuestro destino.<br>
+                Respira el universo en cada mirada, guardando memorias que no se apagan.<br>
+                Nunca un corazón se ha rendido cuando la esperanza lo guía en la oscuridad.<br>
+                Inmortal es la fuerza de lo que sentimos, incluso más allá del tiempo.<br>
+                Dentro de tus ojos encuentro la calma que ninguna tormenta me puede arrebatar.<br>
+                Así, cada instante se convierte en un tesoro que guardamos juntos.<br>
+                Del silencio surge la certeza de que lo nuestro no tiene fin."
+            </p>
+            
+            <div class="answer-section">
+                <input type="text" class="answer-input" placeholder="Una palabra que no conoce límites..." data-puzzle="1" oninput="updateAccuracy(1)">
+                
+                <div class="accuracy-meter">
+                    <div class="accuracy-fill" id="accuracy1"></div>
+                </div>
+                <div class="accuracy-text" id="accuracyText1">Precisión: 0%</div>
+                
+                <div class="button-grid">
+                    <button class="action-btn scanner" onclick="activateScanner(1)">🔍 Scanner</button>
+                    <button class="action-btn" onclick="showHint(1)">💡 Trabalenguas</button>
+                </div>
+                
+                <div class="scanner-display" id="scanner1">
+                    <div>🔍 ESCANEANDO RESPUESTA...</div>
+                    <div id="scanResult1"></div>
+                </div>
+                
+                <div class="hint-display" id="hint1"></div>
+                <div class="word-analyzer" id="analyzer1"></div>
+                
+                <button class="submit-btn" onclick="checkAnswer(1)">Descifrar</button>
+                <div class="result-message" id="result1"></div>
+            </div>
+        </div>
+
+        <!-- Acertijo 2: Yin-Yang y Go -->
+        <div class="puzzle-card">
+            <div class="puzzle-number">2</div>
+            <h3 class="puzzle-title">☯️ Jugadores Enigmáticos</h3>
+            
+            <div class="yin-yang"></div>
+            <div class="go-board" id="goBoard">
+                <div class="go-grid" id="goGrid">
+                    <div class="go-lines" id="goLines"></div>
+                </div>
+                <div class="go-star-points go-center-star"></div>
+            </div>
+            <div class="go-info" id="goInfo">Turno: Negras | Haz clic para iniciar secuencia automática de 10 piedras</div>
+            <div class="go-controls">
+                <button class="go-btn" onclick="resetGoBoard()">Reiniciar</button>
+                <button class="go-btn" onclick="undoMove()">Deshacer</button>
+                <button class="go-btn" onclick="passMove()">Pasar</button>
+            </div>
+            
+            <p class="puzzle-text">
+               "Un tablero de 19 caminos se abre como un universo de posibilidades.
+Las piedras blancas y negras parecen rivales, como nosotros cuando discutimos,
+pero en cada movimiento revelan un secreto más profundo:
+no se trata de vencer al otro, sino de aprender a sostenernos.
+
+Muchos creen que el sentido del juego es ganar,
+pero el verdadero arte está en equilibrar,
+en abrazar al contrario sin miedo,
+en entender que la sombra da forma a la luz,
+y que la luz solo brilla porque existe la sombra.
+
+Así como el Yin no tiene razón de ser sin el Yang,
+yo no soy sin ti, Amorcito
+Cada línea del tablero me recuerda que nuestras diferencias,
+esas que a veces nos hacen chocar,
+también son las que nos vuelven necesarios el uno para el otro.
+
+En el centro de todo,
+donde los caminos convergen y no hay blancos ni negros absolutos,
+solo quedamos nosotros:
+dos fuerzas distintas que, cuando se buscan, se vuelven eternas.
+Una unión que no resta, sino que suma.
+Una unión que no rompe, sino que construye.
+Una unión como la nuestra,
+que incluso en la ansiedad, en las dudas y en los silencios,
+siempre encuentra la manera de renacer"
+            </p>
+            
+            <div class="answer-section">
+                <input type="text" class="answer-input" placeholder="La fuerza que nos une..." data-puzzle="2" oninput="updateAccuracy(2)">
+                
+                <div class="accuracy-meter">
+                    <div class="accuracy-fill" id="accuracy2"></div>
+                </div>
+                <div class="accuracy-text" id="accuracyText2">Precisión: 0%</div>
+                
+                <div class="button-grid">
+                    <button class="action-btn scanner" onclick="activateScanner(2)">🔍 Scanner</button>
+                    <button class="action-btn" onclick="showHint(2)">💡 Trabalenguas</button>
+                </div>
+                
+                <div class="scanner-display" id="scanner2">
+                    <div>🔍 ESCANEANDO RESPUESTA...</div>
+                    <div id="scanResult2"></div>
+                </div>
+                
+                <div class="hint-display" id="hint2"></div>
+                <div class="word-analyzer" id="analyzer2"></div>
+                
+                <button class="submit-btn" onclick="checkAnswer(2)">Descifrar</button>
+                <div class="result-message" id="result2"></div>
+            </div>
+        </div>
+
+        <!-- Acertijo 3: El Cofre del Tesoro -->
+        <div class="puzzle-card">
+            <div class="puzzle-number">3</div>
+            <h3 class="puzzle-title">💎 El Cofre de los Sentimientos</h3>
+            
+            <div class="treasure-chest" onclick="interactWithChest()" id="treasureChest">
+                <div class="chest-lid" id="chestLid"></div>
+                <div class="chest-lock" id="chestLock"></div>
+                <div class="chest-interior" id="chestInterior">
+                    <div class="treasure-items" id="treasureItems">
+                        <div class="treasure-item" onclick="collectTreasure(this, '💎')" data-treasure="diamond">💎</div>
+                        <div class="treasure-item" onclick="collectTreasure(this, '🌹')" data-treasure="rose">🌹</div>
+                        <div class="treasure-item" onclick="collectTreasure(this, '💝')" data-treasure="gift">💝</div>
+                        <div class="treasure-item" onclick="collectTreasure(this, '🗝️')" data-treasure="key">🗝️</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acertijo del cofre -->
+            <div class="chest-puzzle" id="chestPuzzle">
+                <h3 style="color: #ffd700; margin-bottom: 20px;">🔐 Combinación del Cofre del Amor</h3>
+                <p style="color: #fff; margin-bottom: 20px;">
+                    "Los números del amor eterno están en los acertijos 2 y 3.<br>
+                    Encuentra los 2 números y completa la combinación: 0 - ? - ?"
+                </p>
+                <div class="combination-lock">
+                    <div class="combination-dial" onclick="rotateDial(0)">
+                        <div class="dial-pointer"></div>
+                        <div class="dial-number" id="dial0">0</div>
+                    </div>
+                    <div class="combination-dial" onclick="rotateDial(1)">
+                        <div class="dial-pointer"></div>
+                        <div class="dial-number" id="dial1">0</div>
+                    </div>
+                    <div class="combination-dial" onclick="rotateDial(2)">
+                        <div class="dial-pointer"></div>
+                        <div class="dial-number" id="dial2">0</div>
+                    </div>
+                </div>
+                <button class="submit-btn" onclick="checkCombination()" style="margin-top: 20px;">
+                    🔓 Probar Combinación
+                </button>
+                <div id="combinationResult" style="margin-top: 15px;"></div>
+            </div>
+            
+            <p class="puzzle-text">
+                "No se escribe en papel, porque el tiempo lo borra. No se grita al viento, porque el aire lo lleva. Se graba en actos, se fortalece en la paciencia, y solo es verdadero si ambos lo cuidan. Soy el lazo invisible que ata tu alma a la mía. Dentro de este cofre mágico se guardan los tesoros más preciados. ¿donde habita?"
+            </p>
+            
+            <div class="answer-section">
+                <input type="text" class="answer-input" placeholder="El santuario de nuestros sentimientos..." data-puzzle="3" oninput="updateAccuracy(3)">
+                
+                <div class="accuracy-meter">
+                    <div class="accuracy-fill" id="accuracy3"></div>
+                </div>
+                <div class="accuracy-text" id="accuracyText3">Precisión: 0%</div>
+                
+                <div class="button-grid">
+                    <button class="action-btn scanner" onclick="activateScanner(3)">🔍 Scanner</button>
+                    <button class="action-btn" onclick="showHint(3)">💡 Trabalenguas</button>
+                </div>
+                
+                <div class="scanner-display" id="scanner3">
+                    <div>🔍 ESCANEANDO RESPUESTA...</div>
+                    <div id="scanResult3"></div>
+                </div>
+                
+                <div class="hint-display" id="hint3"></div>
+                <div class="word-analyzer" id="analyzer3"></div>
+                
+                <button class="submit-btn" onclick="checkAnswer(3)">Descifrar</button>
+                <div class="result-message" id="result3"></div>
+            </div>
+
+            <!-- Mini acertijos del cofre -->
+            <div class="mini-puzzles" id="miniPuzzles">
+                <div class="mini-puzzle">
+                    <h4>🌹 La Confianza</h4>
+                    <p>"No se ve, pero se siente. No se toca, pero sostiene. Sin mí, hasta el amor más fuerte se derrumba. ¿Qué soy?"</p>
+                    <input type="text" placeholder="Respuesta..." data-mini="1">
+                    <button onclick="checkMiniAnswer(1)">Resolver</button>
+                    <div class="love-letter" id="letter1" style="display:none;">
+                        "Sé que dañé la confianza, pero también sé que puedo reconstruirla con amor, paciencia y verdad. Prometo sostener tu corazón con respeto siempre."
+                    </div>
+                </div>
+
+                <div class="mini-puzzle">
+                    <h4>🌹 Tu Valor</h4>
+                    <p>"Soy más brillante que el oro, aunque muchos no lo ven. Soy única, irrepetible, y mi valor no depende de otros. ¿Qué soy?"</p>
+                    <input type="text" placeholder="Respuesta..." data-mini="2">
+                    <button onclick="checkMiniAnswer(2)">Resolver</button>
+                    <div class="love-letter" id="letter2" style="display:none;">
+                        "Tú eres lo más valioso que tengo. Perdóname por los momentos en que te hice sentir menos. Hoy lo que quiero es recordarte siempre lo inmensa y especial que eres."
+                    </div>
+                </div>
+
+                <div class="mini-puzzle">
+                    <h4>🌹 El Perdón</h4>
+                    <p>"No borro el pasado, pero abro el futuro. No soy olvido, soy transformación. ¿Qué soy?"</p>
+                    <input type="text" placeholder="Respuesta..." data-mini="3">
+                    <button onclick="checkMiniAnswer(3)">Resolver</button>
+                    <div class="love-letter" id="letter3" style="display:none;">
+                        "He cometido errores muy dolorosos, pero de ellos aprendí lo que jamás volveré a repetir. Gracias por darme la oportunidad de transformarme contigo."
+                    </div>
+                </div>
+
+                <div class="mini-puzzle">
+                    <h4>🌹 Amor Verdadero</h4>
+                    <p>"Puedo caer mil veces, pero si hay voluntad siempre me levanto. Soy más fuerte cuando dos corazones me cuidan. ¿Qué soy?"</p>
+                    <input type="text" placeholder="Respuesta..." data-mini="4">
+                    <button onclick="checkMiniAnswer(4)">Resolver</button>
+                    <div class="love-letter" id="letter4" style="display:none;">
+                        "Nuestro amor no es perfecto, pero es real. Y quiero que lo hagamos cada día más fuerte, cuidándonos y eligiéndonos con todo el corazón."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+</div>
+
+<audio id="audioPlayer" src="musica.mp3"></audio>
+
+<script>
+    // Variables globales del escape room
+    let musicPlaying = false;
+    let sphereActivated = false;
+    let goBoard = [];
+    let currentPlayer = 'black';
+    let moveHistory = [];
+    let chestUnlocked = false;
+    let collectedTreasures = [];
+    let dialValues = [0, 0, 0];
+    let correctCombination = [9,4, 7];
+
+    const puzzles = {
+        1: {
+            answer: 'eternidad',
+            message: "💖 ¡Correcto! Has desbloqueado el primer secreto del corazón. La eternidad es lo que sentimos cuando el amor verdadero florece, como la ballena que siempre sigue nadando sin detenerse en océanos infinitos.",
+            prize: "🌊",
+            trabalenguas: [
+     "💌 Una carta guarda lo que nunca supe decir a tiempo. En ella están las palabras que debí tomar la iniciativa de escribir antes, cuando tú esperabas claridad y yo me quedaba en silencio.",
+     "✒️ Cada línea de esta carta empieza con algo más que una palabra: empieza con la clave que hoy quiero entregarte."
+            ]
+        },
+        2: {
+            answer: 'complemento', // <--- CAMBIADO
+            message: "☯️ ¡Perfecto! Tu premio es el número 4. El 4 simboliza nuestra base firme, los pilares que sostienen lo que queremos construir en perfecta armonía.",
+            prize: "4",
+            trabalenguas: [
+                "♟️ Mira cómo juega cada jugador, blanco busca espacio, negro busca amor. Ni gana el fuerte ni pierde el menor, la clave se esconde en el rastro que dejaron."            
+            ]
+        },
+        3: {
+            answer: 'corazón',
+            message: "💎 ¡Excelente! Tu premio es el número 7. El 7 simboliza la suerte, la ternura y las nuevas oportunidades que nos esperan en el cofre de nuestros corazones.",
+            prize: "7",
+            trabalenguas: [
+    "🌀 Soy un lugar sin coordenadas exactas, aunque todos me buscan como origen.",
+    "⚡ Si divides tu cuerpo en dos mitades perfectas, me encontrarás en una, pero sin mí la otra no existiría.",
+    "🔢 No soy cero, porque tengo peso. No soy infinito, porque tengo límite. Pero si tomas el uno y lo elevas a mí, seguirás siendo uno.",
+    "🧭 No aparezco en los mapas, pero soy brújula de tus pasos. No soy un número, pero marco tu tiempo con exactitud."
+            ]
+        }
+    };
+
+    // Funciones de la esfera mágica y música
+    function activateSphere() {
+        const sphere = document.getElementById('magicSphere');
+        const whale = document.getElementById('whaleContainer');
+        const musicPlayer = document.getElementById('musicPlayer');
+        const audio = document.getElementById('audioPlayer'); // Nuevo
+
+        if (!sphereActivated) {
+            sphereActivated = true;
+            sphere.style.animation = 'crystalFloat 2s ease-in-out infinite, crystalRotate 4s linear infinite, crystalGlow 1s ease-in-out infinite alternate';
+            sphere.style.transform = 'translate(-50%, -50%) scale(1.3)';
+            sphere.style.boxShadow = `
+                0 0 50px rgba(64, 224, 208, 1),
+                0 0 80px rgba(255, 107, 157, 0.8),
+                inset 0 0 60px rgba(255, 255, 255, 0.6),
+                inset 0 0 80px rgba(64, 224, 208, 0.4)
+            `;
+            whale.style.filter = 'drop-shadow(0 0 30px rgba(64, 224, 208, 0.9))';
+            musicPlayer.style.display = 'block';
+
+            // Reproducir musica.mp3
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play();
+            }
+
+            showMessage("🔮 La bola de cristal mágica ha activado la canción del laberinto...", "success");
+            createMagicalParticles();
+        }
+    }
+
+    function toggleMusic() {
+        const playBtn = document.getElementById('playBtn');
+        const audio = document.getElementById('audioPlayer');
+        musicPlaying = !musicPlaying;
+
+        if (musicPlaying) {
+            playBtn.textContent = '⏸️';
+            if (audio) {
+                audio.play();
+            }
+            showMessage("🎵 Reproduciendo: As The World Falls Down - David Bowie", "success");
+        } else {
+            playBtn.textContent = '▶️';
+            if (audio) {
+                audio.pause();
+            }
+            showMessage("🎵 Música pausada", "info");
+        }
+    }
+
+    function showLyrics() {
+        const lyricsModal = document.getElementById('lyricsModal');
+        lyricsModal.style.display = 'block';
+        
+        // Animación de entrada
+        setTimeout(() => {
+            lyricsModal.style.opacity = '1';
+        }, 10);
+    }
+
+    function closeLyrics() {
+        const lyricsModal = document.getElementById('lyricsModal');
+        lyricsModal.style.display = 'none';
+    }
+
+    function createMagicalParticles() {
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => {
+                const particle = document.createElement('div');
+                particle.innerHTML = ['✨', '🌟', '💫', '⭐'][Math.floor(Math.random() * 4)];
+                particle.style.position = 'fixed';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.fontSize = '20px';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '999';
+                particle.style.animation = 'floatCat 3s ease-out forwards';
+                document.body.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 3000);
+            }, i * 100);
+        }
+    }
+
+    // Funciones del tablero de Go
+    function initializeGoBoard() {
+        const board = document.getElementById('goBoard');
+        const grid = document.getElementById('goGrid');
+        const lines = document.getElementById('goLines');
+        goBoard = Array(19).fill().map(() => Array(19).fill(null));
+        
+        // Crear coordenadas (letras A-S para columnas)
+        const letters = 'ABCDEFGHJKLMNOPQRST'; // Sin I para evitar confusión con 1
+        for (let i = 0; i < 19; i++) {
+            // Letras en la parte superior
+            const letterTop = document.createElement('div');
+            letterTop.className = 'go-coordinates go-coord-letter';
+            letterTop.textContent = letters[i];
+            letterTop.style.left = (30 + i * 320 / 18) + 'px';
+            board.appendChild(letterTop);
+            
+            // Letras en el lado inferior
+            const letterBottom = document.createElement('div');
+            letterBottom.className = 'go-coordinates go-coord-letter';
+            letterBottom.textContent = letters[i];
+            letterBottom.style.left = (30 + i * 320 / 18) + 'px';
+            letterBottom.style.top = '360px';
+            board.appendChild(letterBottom);
+            
+            // Números en el lado izquierdo
+            const numberLeft = document.createElement('div');
+            numberLeft.className = 'go-coordinates go-coord-number';
+            numberLeft.textContent = (19 - i).toString();
+            numberLeft.style.top = (30 + i * 320 / 18) + 'px';
+            board.appendChild(numberLeft);
+            
+            // Números en el lado derecho
+            const numberRight = document.createElement('div');
+            numberRight.className = 'go-coordinates go-coord-number';
+            numberRight.textContent = (19 - i).toString();
+            numberRight.style.top = (30 + i * 320 / 18) + 'px';
+            numberRight.style.left = '360px';
+            board.appendChild(numberRight);
+        }
+        
+        // Crear líneas del tablero
+        for (let i = 0; i < 19; i++) {
+            // Líneas horizontales
+            const hLine = document.createElement('div');
+            hLine.className = 'go-line-h';
+            hLine.style.top = (i * 320 / 18) + 'px';
+            lines.appendChild(hLine);
+            
+            // Líneas verticales
+            const vLine = document.createElement('div');
+            vLine.className = 'go-line-v';
+            vLine.style.left = (i * 320 / 18) + 'px';
+            lines.appendChild(vLine);
+        }
+        
+        // Crear intersecciones
+        for (let row = 0; row < 19; row++) {
+            for (let col = 0; col < 19; col++) {
+                const intersection = document.createElement('div');
+                intersection.className = 'go-intersection';
+                intersection.dataset.row = row;
+                intersection.dataset.col = col;
+                intersection.style.left = (col * 320 / 18) + 'px';
+                intersection.style.top = (row * 320 / 18) + 'px';
+                intersection.onclick = () => startAutoPlay(row, col);
+                grid.appendChild(intersection);
+            }
+        }
+    }
+
+    function placeStone(row, col, player = currentPlayer) {
+        if (goBoard[row][col] !== null) return false;
+        
+        const intersection = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+        const stone = document.createElement('div');
+        stone.className = `go-stone ${player}`;
+        intersection.appendChild(stone);
+        
+        goBoard[row][col] = player;
+        moveHistory.push({row, col, player: player});
+        
+        return true;
+    }
+
+    function startAutoPlay(row, col) {
+        const letters = 'ABCDEFGHJKLMNOPQRST';
+        const baseWord = ['C','O','M','P','L','E','M','E','N','T','O'];
+
+        // Permutar aleatoriamente la palabra COMPLEMENTO
+        function shuffle(array) {
+            let arr = array.slice();
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        const permutedWord = shuffle(baseWord);
+
+        // Obtener columnas según la permutación
+        const targetCols = permutedWord.map(l => letters.indexOf(l));
+
+        // Generar 11 filas aleatorias (sin repetir)
+        let usedRows = [];
+        while (usedRows.length < 11) {
+            let r = Math.floor(Math.random() * 19);
+            if (!usedRows.includes(r)) usedRows.push(r);
+        }
+
+        resetGoBoard();
+
+        let player = 'black';
+
+        // Colocar piedras una por una con mensaje
+        function placeNextStone(i) {
+            if (i >= targetCols.length) {
+                updateGoInfo();
+                // Desactivar clics en intersecciones
+                const intersections = document.querySelectorAll('.go-intersection');
+                intersections.forEach(int => int.style.pointerEvents = 'none');
+                showMessage(`🎮 Secuencia especial: 11 piedras colocadas`, "success");
+                checkGoPattern();
+                return;
+            }
+            const coord = letters[targetCols[i]] + (19 - usedRows[i]);
+            showMessage(`${player === 'black' ? 'Negras' : 'Blancas'} juegan en ${coord} (${permutedWord[i]})`, "info");
+            setTimeout(() => {
+                placeStone(usedRows[i], targetCols[i], player);
+                player = player === 'black' ? 'white' : 'black';
+                placeNextStone(i + 1);
+            }, 700);
+        }
+
+        placeNextStone(0);
+    }
+
+    function checkGoPattern() {
+        // Verificar si se forma un patrón de equilibrio (centro ocupado)
+        if (goBoard[9][9] !== null) {
+            showMessage("⚖️ ¡Has encontrado el equilibrio en el centro del tablero!", "success");
+            createCats();
+        }
+    }
+
+    function resetGoBoard() {
+        goBoard = Array(19).fill().map(() => Array(19).fill(null));
+        moveHistory = [];
+        currentPlayer = 'black';
+        
+        const stones = document.querySelectorAll('.go-stone');
+        stones.forEach(stone => stone.remove());
+        
+        // Reactivar clics en las intersecciones
+        const intersections = document.querySelectorAll('.go-intersection');
+        intersections.forEach(int => int.style.pointerEvents = 'auto');
+        
+        updateGoInfo();
+        showMessage("🔄 Tablero reiniciado", "info");
+    }
+
+    function undoMove() {
+        if (moveHistory.length === 0) return;
+        
+        const lastMove = moveHistory.pop();
+        const intersection = document.querySelector(`[data-row="${lastMove.row}"][data-col="${lastMove.col}"]`);
+        const stone = intersection.querySelector('.go-stone');
+        if (stone) stone.remove();
+        
+        goBoard[lastMove.row][lastMove.col] = null;
+        currentPlayer = lastMove.player;
+        updateGoInfo();
+    }
+
+    function passMove() {
+        currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+        updateGoInfo();
+        showMessage(`${currentPlayer === 'black' ? 'Negras' : 'Blancas'} pasan el turno`, "info");
+    }
+
+    function updateGoInfo() {
+        const info = document.getElementById('goInfo');
+        const blackStones = moveHistory.filter(move => move.player === 'black').length;
+        const whiteStones = moveHistory.filter(move => move.player === 'white').length;
+        info.textContent = `Turno: ${currentPlayer === 'black' ? 'Negras' : 'Blancas'} | Negras: ${blackStones} | Blancas: ${whiteStones} | Total: ${moveHistory.length}`;
+    }
+
+    // Funciones del cofre del tesoro
+    function interactWithChest() {
+        const puzzle = document.getElementById('chestPuzzle');
+        if (!chestUnlocked) {
+            puzzle.classList.add('active');
+            showMessage("🔐 El cofre está cerrado. Necesitas la combinación correcta...", "info");
+        }
+    }
+
+    function rotateDial(dialIndex) {
+        dialValues[dialIndex] = (dialValues[dialIndex] + 1) % 10;
+        document.getElementById(`dial${dialIndex}`).textContent = dialValues[dialIndex];
+        
+        // Efecto visual
+        const dial = document.querySelectorAll('.combination-dial')[dialIndex];
+        dial.style.transform = 'scale(1.2)';
+        setTimeout(() => {
+            dial.style.transform = 'scale(1)';
+        }, 200);
+    }
+
+    function checkCombination() {
+        const result = document.getElementById('combinationResult');
+        
+        if (JSON.stringify(dialValues) === JSON.stringify(correctCombination)) {
+            chestUnlocked = true;
+            const chest = document.getElementById('treasureChest');
+            const lock = document.getElementById('chestLock');
+            const puzzle = document.getElementById('chestPuzzle');
+            
+            chest.classList.add('chest-open');
+            lock.classList.add('unlocked');
+            puzzle.classList.remove('active');
+            
+            document.getElementById('treasureItems').style.display = 'grid';
+            
+            result.innerHTML = '<div style="color: #40e0d0;">✅ ¡Combinación correcta! El cofre se ha abierto.</div>';
+            showMessage("🎉 ¡Has desbloqueado el cofre del amor!", "success");
+            createMagicalParticles();
+        } else {
+            result.innerHTML = '<div style="color: #ff6b9d;">❌ Combinación incorrecta. Busca los números en los acertijos.</div>';
+            
+            // Efecto de vibración
+            const dials = document.querySelectorAll('.combination-dial');
+            dials.forEach(dial => {
+                dial.style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(() => {
+                    dial.style.animation = '';
+                }, 500);
+            });
+        }
+    }
+
+    function collectTreasure(element, treasure) {
+        if (element.classList.contains('collected')) return;
+        
+        element.classList.add('collected');
+        collectedTreasures.push(treasure);
+        
+        showMessage(`✨ Has recogido: ${treasure}`, "success");
+        createCats();
+        
+        if (collectedTreasures.length === 4) {
+            setTimeout(() => {
+                showFinalMessage();
+            }, 1000);
+        }
+    }
+
+    function showMessage(message, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: ${type === 'success' ? 'rgba(64, 224, 208, 0.9)' : type === 'info' ? 'rgba(255, 107, 157, 0.9)' : 'rgba(255, 165, 0, 0.9)'};
+           
+            color: #000;
+            padding: 15px 25px;
+            border-radius: 10px;
+                       font-weight: bold;
+            z-index: 1001;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: messageSlide 3s ease-out forwards;
+        `;
+        messageDiv.textContent = message;
+        document.body.appendChild(messageDiv);
+        
+        setTimeout(() => messageDiv.remove(), 3000);
+    }
+
+    function showFinalMessage() {
+        const finalDiv = document.createElement('div');
+        finalDiv.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.95);
+                border: 4px solid #ffd700;
+                border-radius: 25px;
+                padding: 50px;
+                text-align: center;
+                z-index: 1002;
+                box-shadow: 0 0 60px rgba(255, 215, 0, 0.8);
+                max-width: 600px;
+            ">
+                <h2 style="color: #ffd700; margin-bottom: 25px; font-size: 3rem;">
+                    🎉 ¡ESCAPE ROOM COMPLETADO! 🎉
+                </h2>
+                <p style="color: #40e0d0; font-size: 1.5rem; margin-bottom: 25px;">
+                    Has encontrado todos los tesoros del amor
+                </p>
+                <div style="font-size: 2rem; margin: 20px 0;">
+                    ${collectedTreasures.join(' ')}
+                </div>
+                <p style="color: #ff6b9d; font-style: italic; font-size: 1.3rem; margin-bottom: 30px;">
+                    "As the world falls down, falling in love..."<br>
+                    El amor verdadero siempre encuentra su camino
+                </p>
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    padding: 20px 40px;
+                    background: linear-gradient(45deg, #ff6b9d, #40e0d0);
+                    border: none;
+                    border-radius: 15px;
+                    color: #000;
+                    font-weight: bold;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                ">Continuar el Viaje del Amor</button>
+            </div>
+        `;
+        document.body.appendChild(finalDiv);
+    }
+
+    let hintIndex = {1: 0, 2: 0, 3: 0};
+    let scannerActive = {1: false, 2: false, 3: false};
+
+    const miniAnswers = {
+        1: ['confianza'],
+        2: ['yo', 'tú', 'ella', 'mujer'],
+        3: ['perdón'],
+        4: ['amor', 'amor verdadero']
+    };
+
+    let solvedPuzzles = 0;
+    let chestOpened = false;
+    const totalPuzzles = 3;
+
+    function updateAccuracy(puzzleNumber) {
+        const input = document.querySelector(`input[data-puzzle="${puzzleNumber}"]`);
+        const accuracyFill = document.getElementById(`accuracy${puzzleNumber}`);
+        const accuracyText = document.getElementById(`accuracyText${puzzleNumber}`);
+        const userAnswer = input.value.toLowerCase().trim();
+        
+        if (userAnswer === '') {
+            accuracyFill.style.width = '0%';
+            accuracyText.textContent = 'Precisión: 0%';
+            return;
+        }
+
+        const puzzle = puzzles[puzzleNumber];
+        const correctAnswer = puzzle.answer.toLowerCase();
+        const accuracy = calculateSimilarity(userAnswer, correctAnswer);
+
+        accuracyFill.style.width = accuracy + '%';
+        accuracyText.textContent = `Precisión: ${Math.round(accuracy)}%`;
+        
+        if (accuracy > 80) {
+            accuracyText.style.color = '#40e0d0';
+            accuracyText.textContent += ' - ¡Muy cerca! 💖';
+        } else if (accuracy > 50) {
+            accuracyText.style.color = '#ffa500';
+            accuracyText.textContent += ' - Vas bien 🌟';
+        } else {
+            accuracyText.style.color = '#ff6b9d';
+        }
+    }
+
+    function calculateSimilarity(str1, str2) {
+        const longer = str1.length > str2.length ? str1 : str2;
+        const shorter = str1.length > str2.length ? str2 : str1;
+        
+        if (longer.length === 0) return 100;
+        
+        const distance = levenshteinDistance(longer, shorter);
+        return ((longer.length - distance) / longer.length) * 100;
+    }
+
+    function levenshteinDistance(str1, str2) {
+        const matrix = [];
+        for (let i = 0; i <= str2.length; i++) {
+            matrix[i] = [i];
+        }
+        for (let j = 0; j <= str1.length; j++) {
+            matrix[0][j] = j;
+        }
+        for (let i = 1; i <= str2.length; i++) {
+            for (let j = 1; j <= str1.length; j++) {
+                if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
+                    );
+                }
+            }
+        }
+        return matrix[str2.length][str1.length];
+    }
+
+    function activateScanner(puzzleNumber) {
+        const scanner = document.getElementById(`scanner${puzzleNumber}`);
+        const scanResult = document.getElementById(`scanResult${puzzleNumber}`);
+        
+        scanner.style.display = 'block';
+        scannerActive[puzzleNumber] = true;
+        
+        scanResult.innerHTML = '🔄 Escaneando letra de la canción en busca de pistas...';
+        
+        setTimeout(() => {
+            // Iluminar las palabras "love" en la letra de la canción
+            highlightLoveWords();
+            
+            scanResult.innerHTML = `
+                <div style="color: #40e0d0;">✨ SCANNER ACTIVADO</div>
+            `;
+        }, 2000);
+    }
+
+    function highlightLoveWords() {
+        // Activar la iluminación de todas las palabras "love" en la letra de la canción
+        const loveWords = document.querySelectorAll('.love-word');
+        loveWords.forEach(word => {
+            word.classList.add('scanner-active');
+        });
+    }
+
+    function showHint(puzzleNumber) {
+        const hintDisplay = document.getElementById(`hint${puzzleNumber}`);
+        const puzzle = puzzles[puzzleNumber];
+
+        hintDisplay.style.display = 'block';
+        const currentTrabalenguas = puzzle.trabalenguas[hintIndex[puzzleNumber]];
+        let extraText = '';
+
+        // Solo mostrar el texto en el segundo enigma
+        if (puzzleNumber === 2) {
+            extraText = `<div style="margin-top: 10px; font-size: 0.9rem; color: #fff; opacity: 0.8;">
+            💡 No necesitas saber quien ganara
+        </div>`;
+        }
+
+        hintDisplay.innerHTML = `
+            <div style="text-align: center; margin-bottom: 10px;">
+                <strong style="color: #ff6b9d;">🎭 Trabalenguas Romántico ${hintIndex[puzzleNumber] + 1}</strong>
+            </div>
+            <div style="font-style: italic; font-size: 1.1rem; line-height: 1.6; color: #40e0d0;">
+                ${currentTrabalenguas}
+            </div>
+            ${extraText}
+        `;
+        
+        hintIndex[puzzleNumber] = (hintIndex[puzzleNumber] + 1) % puzzle.trabalenguas.length;
+    }
+
+
+
+    function checkAnswer(puzzleNumber) {
+        const input = document.querySelector(`input[data-puzzle="${puzzleNumber}"]`);
+        const resultDiv = document.getElementById(`result${puzzleNumber}`);
+        const answer = input.value.toLowerCase().trim();
+        
+        const puzzle = puzzles[puzzleNumber];
+        const isCorrect = puzzle.answer.toLowerCase() === answer;
+
+        resultDiv.classList.remove('show');
+        
+        setTimeout(() => {
+            if (isCorrect) {
+                resultDiv.className = 'result-message correct show';
+                resultDiv.innerHTML = `
+                    <div>✨ ¡MENSAJE DECODIFICADO! ✨</div>
+                    <div style="font-size: 2.5rem; margin: 20px 0; color: #40e0d0; text-shadow: 0 0 25px rgba(64, 224, 208, 0.8); animation: pulse 1s ease-in-out infinite;">
+                        🎁 PREMIO: ${puzzle.prize} 🎁
+                    </div>
+                    <div class="romantic-message">${puzzle.message}</div>
+                `;
+                
+                if (!input.dataset.solved) {
+                    input.dataset.solved = 'true';
+                    solvedPuzzles++;
+                    updateProgress();
+                    createCats();
+                    
+                    if (puzzleNumber === 3) {
+                        document.getElementById('miniPuzzles').style.display = 'grid';
+                    }
+                }
+                
+                input.disabled = true;
+                input.nextElementSibling.disabled = true;
+            } else {
+                resultDiv.className = 'result-message incorrect show';
+                resultDiv.innerHTML = `
+                    <div>💭 Intenta de nuevo...</div>
+                    <div class="romantic-message">El amor requiere paciencia. Reflexiona un poco más sobre los sentimientos del corazón.</div>
+                `;
+            }
+        }, 100);
+    }
+
+    function toggleChest() {
+        const chest = document.getElementById('treasureChest');
+        if (!chestOpened) {
+            chest.classList.add('chest-open');
+            chestOpened = true;
+        }
+    }
+
+    function checkMiniAnswer(miniNumber) {
+        const input = document.querySelector(`input[data-mini="${miniNumber}"]`);
+        const letter = document.getElementById(`letter${miniNumber}`);
+        const answer = input.value.toLowerCase().trim();
+        
+        const correctAnswers = miniAnswers[miniNumber];
+        const isCorrect = correctAnswers.some(correctAnswer => 
+            correctAnswer.toLowerCase() === answer
+        );
+
+        if (isCorrect) {
+            letter.style.display = 'block';
+            input.disabled = true;
+            input.nextElementSibling.disabled = true;
+            input.style.background = 'rgba(64, 224, 208, 0.2)';
+            createCats();
+        } else {
+            input.style.background = 'rgba(255, 107, 157, 0.2)';
+            setTimeout(() => {
+                input.style.background = 'rgba(0, 0, 0, 0.6)';
+            }, 1000);
+        }
+    }
+
+    function updateProgress() {
+        const progressBar = document.getElementById('progressBar');
+        const progress = (solvedPuzzles / totalPuzzles) * 100;
+        progressBar.style.width = progress + '%';
+        
+        if (solvedPuzzles === totalPuzzles) {
+            setTimeout(() => {
+                showCompletionMessage();
+            }, 2000);
+        }
+    }
+
+    function showCompletionMessage() {
+        const completionDiv = document.createElement('div');
+        completionDiv.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.95);
+                border: 4px solid #ff6b9d;
+                border-radius: 25px;
+                padding: 50px;
+                text-align: center;
+                z-index: 1000;
+                box-shadow: 0 0 60px rgba(255, 107, 157, 0.7);
+                max-width: 500px;
+            ">
+                <h2 style="color: #40e0d0; margin-bottom: 25px; font-size: 2.5rem; animation: glow 2s ease-in-out infinite alternate;">
+                    🎉 ¡MISIÓN COMPLETADA! 🎉
+                </h2>
+                <p style="color: #fff; font-size: 1.3rem; margin-bottom: 25px;">
+                    Has decodificado todos los mensajes del corazón
+                </p>
+                <div style="font-size: 3rem; margin: 20px 0;">
+                    💖 🌊 • 4 • 7 💖
+                </div>
+                <p style="color: #ff6b9d; font-style: italic; font-size: 1.2rem; margin-bottom: 30px;">
+                    El amor verdadero siempre encuentra su camino a través de los acertijos del corazón
+                </p>
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    padding: 15px 30px;
+                    background: linear-gradient(45deg, #ff6b9d, #40e0d0);
+                    border: none;
+                    border-radius: 10px;
+                    color: #000;
+                    font-weight: bold;
+                    font-size: 1.1rem;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                ">Continuar el Viaje</button>
+            </div>
+        `;
+        document.body.appendChild(completionDiv);
+    }
+
+    function createCats() {
+        const catsContainer = document.getElementById('floatingCats');
+        const catEmojis = ['🐱', '😻', '😸', '🐈', '🐾'];
+        
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+                const cat = document.createElement('div');
+                cat.className = 'cat';
+                cat.innerHTML = catEmojis[Math.floor(Math.random() * catEmojis.length)];
+                cat.style.left = Math.random() * 100 + '%';
+                cat.style.animationDelay = Math.random() * 3 + 's';
+                cat.style.animationDuration = (8 + Math.random() * 6) + 's';
+                catsContainer.appendChild(cat);
+                
+                setTimeout(() => {
+                    cat.remove();
+                }, 15000);
+            }, i * 300);
+        }
+    }
+
+    // Cerrar modal al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        const lyricsModal = document.getElementById('lyricsModal');
+        if (e.target === lyricsModal) {
+            closeLyrics();
+        }
+    });
+
+    // Cerrar modal con tecla Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeLyrics();
+        }
+    });
+
+    // Inicialización del escape room
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeGoBoard();
+        
+        // Añadir animaciones CSS adicionales
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+            @keyframes messageSlide {
+                0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            }
+        `;
+        document.head.appendChild(style);
+    });
+
+    // Permitir envío con Enter
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            if (e.target.classList.contains('answer-input')) {
+                const puzzleNumber = e.target.dataset.puzzle;
+                checkAnswer(parseInt(puzzleNumber));
+            } else if (e.target.dataset.mini) {
+                const miniNumber = e.target.dataset.mini;
+                checkMiniAnswer(parseInt(miniNumber));
+            }
+        }
+    });
+
+    // Crear gatitos flotantes iniciales
+    setInterval(createCats, 15000);
+</script>
+</body>
+</html>
